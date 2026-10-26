@@ -1,1 +1,437 @@
-# tinytool-market
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f8fc">
+<title>TinyTool Market — 작지만 강력한 도구들</title>
+<style>
+:root{
+  --bg:#f7f8fc;--surface:#fff;--ink:#172033;--muted:#6c7487;--line:#e7eaf2;
+  --primary:#4f46e5;--primary-dark:#3730a3;--primary-soft:#eeedff;--mint:#dff8ee;
+  --shadow:0 14px 38px rgba(31,41,77,.07);--radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;line-height:1.5}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1160px,calc(100% - 40px));margin:0 auto}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(231,234,242,.85)}
+.nav{height:76px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.6px;font-size:21px;white-space:nowrap}
+.brand-mark{width:35px;height:35px;border-radius:12px;background:linear-gradient(135deg,#6d63ff,#4338ca);display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:0 7px 16px #5146d833}
+.navlinks{display:flex;gap:23px;margin-left:10px;color:#5f687b;font-size:14px}
+.navlinks a:hover{color:var(--primary)}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:750;transition:.18s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 7px 16px #4f46e522}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-light{background:#f1f2f8;color:#333b50}
+.btn-outline{background:#fff;border:1px solid var(--line);color:#3d4558}
+.btn-small{padding:8px 11px;border-radius:10px;font-size:13px}
+.hero{padding:66px 0 34px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:480px;height:480px;right:-100px;top:-210px;background:radial-gradient(circle,#e4e2ff 0%,rgba(228,226,255,0) 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #e5e3ff;background:#fff;border-radius:999px;padding:7px 12px;color:var(--primary);font-weight:750;font-size:12px}
+.pulse{width:7px;height:7px;border-radius:50%;background:#38b98a;box-shadow:0 0 0 4px #38b98a1c}
+h1{font-size:clamp(38px,5vw,60px);letter-spacing:-2.8px;line-height:1.13;margin:21px 0 17px;max-width:650px}
+.gradient{background:linear-gradient(100deg,#5145d8,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-copy{font-size:17px;color:var(--muted);max-width:550px;line-height:1.8;margin:0 0 25px}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+.trust-row{display:flex;gap:17px;flex-wrap:wrap;color:#737b8c;font-size:12px;margin-top:23px}
+.trust-row span{display:flex;gap:6px;align-items:center}
+.hero-art{background:linear-gradient(145deg,#e8e7ff,#f4f3ff 55%,#e1f9f0);border-radius:30px;padding:23px;min-height:330px;position:relative;overflow:hidden}
+.float-card{background:#fff;border:1px solid #ffffffc7;border-radius:18px;padding:16px;box-shadow:0 16px 35px #34325d12;position:absolute}
+.float-card h3{margin:0 0 5px;font-size:14px}
+.float-card p{margin:0;color:var(--muted);font-size:11px}
+.art-main{left:9%;top:14%;width:72%;transform:rotate(-3deg)}
+.art-top{right:5%;top:7%;width:42%;transform:rotate(5deg)}
+.art-bottom{right:7%;bottom:8%;width:60%;transform:rotate(2deg)}
+.mini-icon{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.mini-line{height:7px;background:#eef0f6;border-radius:99px;margin-top:11px}
+.mini-line.short{width:55%}
+.mini-tag{display:inline-block;font-size:10px;font-weight:750;background:#e7f8f0;color:#14845d;padding:4px 7px;border-radius:7px;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:35px}
+.stat{padding:15px 17px;border:1px solid #e9eaf3;border-radius:16px;background:#ffffffa8}
+.stat strong{display:block;font-size:22px;letter-spacing:-.5px}
+.stat span{font-size:11px;color:var(--muted)}
+.section{padding:43px 0}
+.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+.section-head h2{font-size:27px;letter-spacing:-.9px;margin:0 0 6px}
+.section-head p{margin:0;color:var(--muted);font-size:14px}
+.text-link{font-weight:750;font-size:13px;color:var(--primary);white-space:nowrap}
+.searchbar{display:flex;gap:10px;margin-bottom:16px}
+.search-wrap{flex:1;position:relative}
+.search-wrap svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#9299aa}
+.search-wrap input{width:100%;height:49px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:0 16px 0 45px;outline:none}
+.search-wrap input:focus{border-color:#9a94ff;box-shadow:0 0 0 4px #5146d814}
+select,.select-like{border:1px solid var(--line);background:#fff;border-radius:13px;padding:0 13px;color:#4c5569;outline:none}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.chip{border:1px solid var(--line);background:#fff;color:#656d80;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700}
+.chip.active{background:var(--primary-soft);color:var(--primary);border-color:#d9d5ff}
+.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.tool-card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:19px;transition:.2s;display:flex;flex-direction:column;min-height:258px}
+.tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#d8d5ff}
+.card-top{display:flex;align-items:flex-start;gap:12px}
+.tool-icon{width:49px;height:49px;border-radius:15px;display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.tool-card h3{font-size:16px;margin:1px 0 4px;letter-spacing:-.3px}
+.creator{font-size:11px;color:var(--muted)}
+.favorite{margin-left:auto;background:#fff;border:1px solid var(--line);border-radius:10px;width:34px;height:34px;color:#81889a;font-size:17px;flex-shrink:0}
+.favorite.active{color:#ef476f;background:#fff0f4;border-color:#ffd3df}
+.tool-desc{font-size:13px;color:#697286;line-height:1.65;margin:17px 0 14px;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:15px}
+.tag{font-size:10px;color:#6e7588;background:#f4f5f9;padding:5px 8px;border-radius:7px}
+.card-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f0f1f6;padding-top:14px}
+.price{font-size:14px;font-weight:850}
+.price small{font-size:10px;color:var(--muted);font-weight:500}
+.rating{font-size:11px;color:#7a8294}
+.rating b{color:#eaa52b}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #d7dbea;border-radius:18px;padding:48px 20px;text-align:center;color:var(--muted)}
+.feature-band{background:#191d36;color:#fff;border-radius:26px;padding:35px;display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:center;overflow:hidden;position:relative}
+.feature-band:after{content:"";position:absolute;width:300px;height:300px;right:-100px;top:-150px;border-radius:50%;background:#6c63ff30}
+.feature-band h2{font-size:29px;line-height:1.25;letter-spacing:-1px;margin:12px 0}
+.feature-band p{color:#b9bfd4;font-size:13px;line-height:1.8;margin:0 0 20px;max-width:460px}
+.feature-list{display:grid;grid-template-columns:1fr 1fr;gap:11px;position:relative;z-index:1}
+.feature-item{border:1px solid #ffffff1c;background:#ffffff0a;padding:15px;border-radius:15px}
+.feature-item b{display:block;font-size:13px;margin:8px 0 4px}
+.feature-item span{color:#b9bfd4;font-size:11px}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.how-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
+.step-num{width:33px;height:33px;display:grid;place-items:center;border-radius:11px;background:var(--primary-soft);color:var(--primary);font-weight:850;font-size:13px}
+.how-card h3{font-size:16px;margin:15px 0 7px}
+.how-card p{font-size:12px;color:var(--muted);line-height:1.8;margin:0}
+.creator-cta{background:#eae9ff;border-radius:25px;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.creator-cta h2{margin:0 0 7px;font-size:24px;letter-spacing:-.7px}
+.creator-cta p{margin:0;color:#666b86;font-size:13px}
+.footer{padding:34px 0 25px;border-top:1px solid var(--line);margin-top:45px;color:var(--muted);font-size:12px}
+.footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-links{display:flex;gap:17px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1e2337;color:#fff;border-radius:12px;padding:12px 17px;font-size:13px;box-shadow:var(--shadow);transition:.22s;z-index:60;max-width:calc(100% - 30px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-backdrop{position:fixed;inset:0;background:#14182a8c;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal-backdrop.show{display:flex}
+.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:23px;padding:25px;box-shadow:0 25px 80px #0e133640}
+.modal-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.modal-head h2{margin:0;font-size:22px;letter-spacing:-.6px}
+.modal-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.modal-close{margin-left:auto;border:0;background:#f1f2f8;border-radius:10px;width:35px;height:35px;font-size:20px;color:#5e6679}
+.form-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.form-field label{font-size:12px;font-weight:800;color:#424b60}
+.form-field input,.form-field select,.form-field textarea{border:1px solid var(--line);border-radius:12px;padding:12px;outline:none;width:100%;background:#fff}
+.form-field textarea{min-height:100px;resize:vertical}
+.form-field input:focus,.form-field textarea:focus,.form-field select:focus{border-color:#9a94ff;box-shadow:0 0 0 3px #5146d812}
+.form-hint{font-size:11px;color:var(--muted);margin-top:-4px;margin-bottom:12px}
+.modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}
+.detail-preview{border:1px solid var(--line);background:#fafbff;border-radius:15px;padding:16px;margin:14px 0}
+.detail-preview h4{margin:0 0 7px;font-size:13px}
+.detail-preview p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+.tool-run-area{display:none;margin-top:16px}
+.tool-run-area.show{display:block}
+.run-output{background:#f7f8fc;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.tool-run-area textarea{width:100%;min-height:100px;border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}
+.tool-run-area textarea:focus{border-color:#9a94ff}
+.pill{font-size:10px;font-weight:800;padding:5px 8px;border-radius:7px;background:#e8f9f1;color:#13825a}
+@media(max-width:900px){
+ .hero-grid{grid-template-columns:1fr;gap:30px}.hero-art{min-height:300px}.tool-grid{grid-template-columns:repeat(2,1fr)}
+ .navlinks{display:none}.feature-band{grid-template-columns:1fr}.feature-list{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+ .wrap{width:min(100% - 28px,1160px)}.nav{height:65px;gap:12px}.brand{font-size:18px}.brand-mark{width:32px;height:32px}
+ .nav-actions .btn-light{display:none}.nav-actions .btn{padding:9px 11px;font-size:12px}
+ .hero{padding:42px 0 20px}h1{font-size:39px;letter-spacing:-1.8px}.hero-copy{font-size:14px}
+ .hero-art{min-height:275px;padding:12px}.art-main{left:4%;top:17%;width:78%}.art-top{right:3%;top:4%;width:45%}.art-bottom{right:3%;bottom:5%;width:65%}
+ .stats{gap:7px}.stat{padding:11px}.stat strong{font-size:18px}.stat span{font-size:10px}
+ .section{padding:30px 0}.section-head{align-items:flex-start}.section-head h2{font-size:23px}.section-head p{font-size:12px}
+ .searchbar{flex-direction:column}.searchbar select{height:45px}.tool-grid{grid-template-columns:1fr}.tool-card{min-height:230px}
+ .feature-band{padding:24px}.feature-band h2{font-size:25px}.feature-list{gap:8px}.feature-item{padding:12px}
+ .how-grid{grid-template-columns:1fr}.creator-cta{align-items:flex-start;flex-direction:column;padding:24px}.creator-cta h2{font-size:22px}
+ .footer-inner{flex-direction:column}.modal{padding:19px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap nav">
+    <a href="#" class="brand" aria-label="TinyTool Market 홈"><span class="brand-mark">✦</span><span>TinyTool <span style="color:#6258e8">Market</span></span></a>
+    <nav class="navlinks" aria-label="주요 메뉴">
+      <a href="#explore">도구 탐색</a><a href="#how">이용 방법</a><a href="#creators">제작자 센터</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-light" id="favoritesNav">♡ 저장한 도구</button>
+      <button class="btn btn-primary" id="openSubmit">＋ 도구 등록</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="pulse"></span> 작지만 강력한 생산성 도구 마켓</div>
+      <h1>작은 도구 하나로<br><span class="gradient">귀찮은 일을 끝내세요.</span></h1>
+      <p class="hero-copy">파일 정리부터 텍스트 변환까지. 필요한 기능만 담은 초소형 업무 도구를 발견하고, 직접 만든 도구도 판매해 보세요.</p>
+      <div class="hero-actions">
+        <a href="#explore" class="btn btn-primary">도구 둘러보기 <span>↗</span></a>
+        <button class="btn btn-outline" id="heroSubmit">내 도구 판매하기</button>
+      </div>
+      <div class="trust-row"><span>✓ 설치 없이 바로 사용</span><span>✓ 무료 도구부터 시작</span><span>✓ 제작자와 함께 성장</span></div>
+      <div class="stats">
+        <div class="stat"><strong id="toolCount">8</strong><span>둘러볼 수 있는 도구</span></div>
+        <div class="stat"><strong>4개</strong><span>업무 카테고리</span></div>
+        <div class="stat"><strong>0원~</strong><span>무료 도구부터 시작</span></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-label="도구 마켓 미리보기">
+      <div class="float-card art-main">
+        <div style="display:flex;align-items:center;gap:10px"><div class="mini-icon" style="background:#eeedff">🪄</div><div><h3>텍스트 정리 도우미</h3><p>복잡한 문장을 깔끔하게</p></div></div>
+        <div class="mini-line"></div><div class="mini-line short"></div><span class="mini-tag">✓ 10초 만에 완료</span>
+      </div>
+      <div class="float-card art-top">
+        <div class="mini-icon" style="background:#dcf8ec;margin-bottom:8px">📊</div><h3>CSV 클리너</h3><p>중복 데이터 정리</p><div class="mini-line"></div>
+      </div>
+      <div class="float-card art-bottom">
+        <div style="display:flex;gap:10px;align-items:center"><div class="mini-icon" style="background:#fff0db">🖼️</div><div><h3>이미지 리사이저</h3><p>한 번에 크기 변경</p></div></div>
+        <div style="display:flex;gap:5px;margin-top:12px"><span class="mini-tag" style="margin:0;background:#eeeaff;color:#6555db">빠른 처리</span><span class="mini-tag" style="margin:0">브라우저에서 실행</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="explore">
+  <div class="wrap">
+    <div class="section-head">
+      <div><h2>필요한 도구를 찾아보세요</h2><p>한 가지 일에 집중한 작은 도구들이 모여 있어요.</p></div>
+      <a href="#creators" class="text-link">제작자라면? →</a>
+    </div>
+    <div class="searchbar">
+      <div class="search-wrap">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="searchInput" type="search" placeholder="도구 이름이나 해결하고 싶은 일을 검색하세요" aria-label="도구 검색">
+      </div>
+      <select id="priceFilter" aria-label="가격 필터"><option value="all">모든 가격</option><option value="free">무료</option><option value="paid">유료</option></select>
+      <select id="sortFilter" aria-label="정렬"><option value="popular">인기순</option><option value="new">최신순</option><option value="priceLow">가격 낮은순</option></select>
+    </div>
+    <div class="filter-row" id="categoryFilters">
+      <button class="chip active" data-category="all">전체 도구</button>
+      <button class="chip" data-category="text">✍️ 텍스트</button>
+      <button class="chip" data-category="file">📁 파일·데이터</button>
+      <button class="chip" data-category="design">🎨 디자인</button>
+      <button class="chip" data-category="work">⚡ 업무 자동화</button>
+      <button class="chip" data-category="saved">♡ 저장한 도구</button>
+    </div>
+    <div class="tool-grid" id="toolGrid"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="feature-band">
+      <div>
+        <span class="pill" style="background:#39365e;color:#c9c5ff">CREATOR PROGRAM</span>
+        <h2>당신의 작은 도구가<br>누군가의 시간을 아껴줍니다.</h2>
+        <p>반복 작업을 줄이는 도구를 만들었다면 TinyTool Market에 등록해 보세요. 처음에는 도구 소개와 사용 방법부터 시작하고, 판매 기능은 단계적으로 확장할 수 있어요.</p>
+        <button class="btn" id="featureSubmit" style="background:#fff;color:#29264f">제작자 시작하기 →</button>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item"><span style="font-size:21px">🧰</span><b>내 도구 등록</b><span>도구의 기능과 사용법을 소개</span></div>
+        <div class="feature-item"><span style="font-size:21px">💸</span><b>가격 직접 설정</b><span>무료 또는 유료 상품으로 제안</span></div>
+        <div class="feature-item"><span style="font-size:21px">📈</span><b>이용 현황 확인</b><span>반응을 확인하고 개선</span></div>
+        <div class="feature-item"><span style="font-size:21px">🌱</span><b>작게 시작하기</b><span>하나의 기능부터 공개</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head"><div><h2>이용 방법은 간단해요</h2><p>필요한 도구를 발견하고, 바로 써보고, 나만의 도구도 공유하세요.</p></div></div>
+    <div class="how-grid">
+      <article class="how-card"><div class="step-num">01</div><h3>필요한 도구 검색</h3><p>카테고리와 검색어로 지금 해결하고 싶은 작업에 맞는 도구를 찾아보세요.</p></article>
+      <article class="how-card"><div class="step-num">02</div><h3>미리 보고 사용하기</h3><p>기능과 가격을 확인하고, 데모가 제공되는 도구는 브라우저에서 직접 실행해 보세요.</p></article>
+      <article class="how-card"><div class="step-num">03</div><h3>내 도구 등록하기</h3><p>도구 설명과 카테고리를 등록해 다른 사람에게 공유할 준비를 해보세요.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="creators">
+  <div class="wrap">
+    <div class="creator-cta">
+      <div><h2>작은 아이디어를 유용한 도구로.</h2><p>직접 만든 도구를 등록하고 사용자 반응을 확인해 보세요.</p></div>
+      <button class="btn btn-primary" id="bottomSubmit">무료로 도구 등록하기 <span>↗</span></button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div><a href="#" class="brand" style="font-size:16px"><span class="brand-mark" style="width:28px;height:28px;border-radius:9px;font-size:16px">✦</span>TinyTool Market</a><p style="margin:9px 0 0">작은 도구로 더 가벼운 일상을 만듭니다.</p></div>
+    <div class="footer-links"><a href="#explore">도구 탐색</a><a href="#how">이용 방법</a><a href="#creators">제작자 센터</a><a href="#" id="aboutLink">서비스 안내</a></div>
+    <div>© 2026 TinyTool Market · 데모 프로토타입</div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="detailBackdrop" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="tool-icon" id="detailIcon" style="background:#eeedff">🪄</div>
+      <div><h2 id="detailTitle">도구 이름</h2><p id="detailCreator">제작자</p></div>
+      <button class="modal-close" data-close="detailBackdrop" aria-label="닫기">×</button>
+    </div>
+    <p id="detailDesc" style="font-size:13px;color:#60697d;line-height:1.8"></p>
+    <div class="detail-preview"><h4>이 도구로 할 수 있는 일</h4><p id="detailFeatures"></p></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><div class="price" id="detailPrice"></div><div class="rating" id="detailRating"></div></div><button class="btn btn-primary" id="runToolBtn">도구 사용해 보기 →</button></div>
+    <div class="tool-run-area" id="toolRunArea">
+      <div class="form-field"><label id="runLabel" for="runInput">입력 텍스트</label><textarea id="runInput" placeholder="내용을 입력하세요"></textarea></div>
+      <button class="btn btn-primary" id="executeTool">실행하기</button>
+      <div class="run-output" id="runOutput" style="display:none"></div>
+      <p class="form-hint" style="margin-top:10px">이 데모는 브라우저에서 예시 기능을 실행합니다. 실제 파일 업로드·결제·계정 저장 기능은 연결되지 않았습니다.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="submitBackdrop" role="dialog" aria-modal="true" aria-labelledby="submitTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="tool-icon" style="background:#eeedff">🧰</div>
+      <div><h2 id="submitTitle">내 도구 등록하기</h2><p>도구 소개를 작성하고 마켓에 등록해 보세요.</p></div>
+      <button class="modal-close" data-close="submitBackdrop" aria-label="닫기">×</button>
+    </div>
+    <form id="submitForm">
+      <div class="form-field"><label for="newName">도구 이름 *</label><input id="newName" maxlength="50" required placeholder="예: 회의록 정리 도우미"></div>
+      <div class="form-field"><label for="newDesc">어떤 문제를 해결하나요? *</label><textarea id="newDesc" maxlength="300" required placeholder="도구의 기능과 장점을 간단히 설명해 주세요."></textarea></div>
+      <div class="form-field"><label for="newCategory">카테고리</label><select id="newCategory"><option value="text">텍스트</option><option value="file">파일·데이터</option><option value="design">디자인</option><option value="work">업무 자동화</option></select></div>
+      <div class="form-field"><label for="newPrice">가격</label><select id="newPrice"><option value="0">무료</option><option value="1900">₩1,900</option><option value="3900">₩3,900</option><option value="5900">₩5,900</option></select></div>
+      <div class="form-field"><label for="newTags">태그 (쉼표로 구분)</label><input id="newTags" maxlength="100" placeholder="예: 생산성, 문서, 자동화"></div>
+      <p class="form-hint">현재 등록 내용은 이 브라우저의 데모 화면에만 추가됩니다. 실제 판매 등록이나 서버 저장은 아직 연결되지 않았습니다.</p>
+      <div class="modal-actions"><button type="button" class="btn btn-light" data-close="submitBackdrop">취소</button><button type="submit" class="btn btn-primary">미리보기 등록</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="aboutBackdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="modal">
+    <div class="modal-head"><div class="tool-icon" style="background:#eeedff">✦</div><div><h2 id="aboutTitle">TinyTool Market 안내</h2><p>작은 업무 도구를 발견하고 소개하는 마켓</p></div><button class="modal-close" data-close="aboutBackdrop" aria-label="닫기">×</button></div>
+    <p style="font-size:13px;color:#60697d;line-height:1.9">이 웹사이트는 초소형 업무 도구 마켓의 인터랙티브 프로토타입입니다. 검색, 필터, 즐겨찾기, 도구 데모, 도구 등록 미리보기는 브라우저에서 동작합니다. 실제 회원가입, 서버 저장, 결제, 판매자 정산은 연결되어 있지 않습니다.</p>
+    <button class="btn btn-primary" data-close="aboutBackdrop" style="width:100%">확인</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const initialTools = [
+ {id:1,name:"텍스트 정리 도우미",creator:"Studio Mino",category:"text",icon:"✍️",color:"#eeedff",desc:"줄바꿈과 불필요한 공백을 정리하고, 복사한 텍스트를 읽기 좋은 형태로 다듬어 줍니다.",features:"연속 공백 제거 · 빈 줄 정리 · 텍스트 길이 확인",price:0,rating:4.9,reviews:128,popularity:98,tags:["텍스트","정리","무료"],kind:"clean"},
+ {id:2,name:"CSV 중복 데이터 클리너",creator:"DataPocket",category:"file",icon:"📊",color:"#dff8ed",desc:"CSV에 들어 있는 중복 행을 빠르게 찾아 제거할 수 있도록 돕는 간단한 데이터 정리 도구입니다.",features:"CSV 텍스트 붙여넣기 · 중복 행 제거 · 결과 복사",price:3900,rating:4.8,reviews:76,popularity:91,tags:["CSV","데이터","정리"],kind:"dedupe"},
+ {id:3,name:"색상 팔레트 메이커",creator:"Colorful Lab",category:"design",icon:"🎨",color:"#fff0dc",desc:"브랜드나 프로젝트에 어울리는 색상 조합을 만들고 HEX 코드를 복사할 수 있습니다.",features:"색상 코드 입력 · 보색 제안 · HEX 코드 복사",price:0,rating:4.7,reviews:94,popularity:88,tags:["디자인","색상","무료"],kind:"palette"},
+ {id:4,name:"회의록 액션 아이템 정리",creator:"FlowNote",category:"work",icon:"📝",color:"#e3efff",desc:"회의 메모에서 할 일, 담당자, 기한을 정리할 수 있도록 구조화하는 도구입니다.",features:"메모 입력 · 할 일 목록 변환 · 결과 복사",price:5900,rating:4.9,reviews:63,popularity:84,tags:["회의","업무","생산성"],kind:"tasks"},
+ {id:5,name:"파일명 일괄 생성기",creator:"ByteBuddy",category:"file",icon:"📁",color:"#f1e8ff",desc:"사진이나 문서 파일에 사용할 규칙적인 이름 목록을 미리 생성합니다.",features:"접두사 · 번호 지정 · 파일명 목록 생성",price:1900,rating:4.6,reviews:42,popularity:71,tags:["파일","이름 변경","정리"],kind:"filenames"},
+ {id:6,name:"SNS 문구 길이 체크",creator:"ShortForm",category:"text",icon:"💬",color:"#ffe7ef",desc:"게시물 문구의 글자 수와 줄 수를 확인하고 짧은 버전으로 다듬기 쉽게 해줍니다.",features:"글자 수 · 공백 포함/제외 길이 · 줄 수 확인",price:0,rating:4.8,reviews:111,popularity:80,tags:["SNS","글자 수","무료"],kind:"count"},
+ {id:7,name:"UTM 링크 빌더",creator:"GrowthKit",category:"work",icon:"🔗",color:"#e1f7f4",desc:"캠페인 이름과 매체 정보를 입력해 추적용 URL을 만들 수 있습니다.",features:"URL 입력 · 캠페인 매개변수 생성 · 링크 복사",price:3900,rating:4.7,reviews:57,popularity:76,tags:["마케팅","URL","자동화"],kind:"utm"},
+ {id:8,name:"간단 견적서 계산기",creator:"SoloOffice",category:"work",icon:"🧾",color:"#fff1d8",desc:"품목과 수량, 단가를 기준으로 예상 견적 합계를 빠르게 계산합니다.",features:"수량 · 단가 · 품목별 합계 · 전체 합계",price:0,rating:4.6,reviews:39,popularity:65,tags:["견적","계산","무료"],kind:"quote"}
+];
+let tools = [...initialTools];
+let selectedCategory = "all";
+let saved = new Set();
+let currentTool = null;
+let nextId = 9;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function money(n){return n===0?"무료":"₩"+n.toLocaleString("ko-KR")}
+function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2600)}
+function escapeHTML(str){return String(str).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderTools(){
+ const q=$("#searchInput").value.trim().toLowerCase();
+ const price=$("#priceFilter").value;
+ const sort=$("#sortFilter").value;
+ let list=tools.filter(t=>{
+   const text=[t.name,t.desc,t.creator,...t.tags].join(" ").toLowerCase();
+   const matchesQ=text.includes(q);
+   const matchesCat=selectedCategory==="all"||(selectedCategory==="saved"?saved.has(t.id):t.category===selectedCategory);
+   const matchesPrice=price==="all"||(price==="free"?t.price===0:t.price>0);
+   return matchesQ&&matchesCat&&matchesPrice;
+ });
+ if(sort==="popular")list.sort((a,b)=>b.popularity-a.popularity);
+ if(sort==="new")list.sort((a,b)=>b.id-a.id);
+ if(sort==="priceLow")list.sort((a,b)=>a.price-b.price);
+ $("#toolCount").textContent=tools.length;
+ $("#toolGrid").innerHTML=list.length?list.map(t=>`
+  <article class="tool-card">
+   <div class="card-top">
+    <div class="tool-icon" style="background:${t.color}">${escapeHTML(t.icon)}</div>
+    <div style="min-width:0"><h3>${escapeHTML(t.name)}</h3><div class="creator">by ${escapeHTML(t.creator)}</div></div>
+    <button class="favorite ${saved.has(t.id)?"active":""}" data-fav="${t.id}" aria-label="${saved.has(t.id)?"즐겨찾기 해제":"즐겨찾기 저장"}">${saved.has(t.id)?"♥":"♡"}</button>
+   </div>
+   <p class="tool-desc">${escapeHTML(t.desc)}</p>
+   <div class="tags">${t.tags.slice(0,3).map(tag=>`<span class="tag"># ${escapeHTML(tag)}</span>`).join("")}</div>
+   <div class="card-foot"><div><div class="price">${money(t.price)}${t.price?'<small> / 도구</small>':''}</div><div class="rating"><b>★</b> ${t.rating.toFixed(1)} <span>(${t.reviews})</span></div></div><button class="btn btn-outline btn-small" data-detail="${t.id}">자세히 보기 ↗</button></div>
+  </article>`).join(""):`<div class="empty"><div style="font-size:30px;margin-bottom:8px">🔎</div><strong style="display:block;color:#424b60;margin-bottom:6px">검색 결과가 없어요</strong><span style="font-size:12px">검색어나 필터를 바꿔 다시 찾아보세요.</span></div>`;
+}
+function openModal(id){$("#"+id).classList.add("show");document.body.style.overflow="hidden"}
+function closeModal(id){$("#"+id).classList.remove("show");if(!$$(".modal-backdrop.show").length)document.body.style.overflow=""}
+function openSubmit(){openModal("submitBackdrop")}
+function showDetail(id){
+ const t=tools.find(x=>x.id===Number(id));if(!t)return;currentTool=t;
+ $("#detailIcon").textContent=t.icon;$("#detailIcon").style.background=t.color;
+ $("#detailTitle").textContent=t.name;$("#detailCreator").textContent="by "+t.creator;
+ $("#detailDesc").textContent=t.desc;$("#detailFeatures").textContent=t.features;
+ $("#detailPrice").textContent=money(t.price);$("#detailRating").innerHTML=`<b style="color:#eaa52b">★</b> ${t.rating.toFixed(1)} · 이용 후기 ${t.reviews}개`;
+ $("#toolRunArea").classList.remove("show");$("#runOutput").style.display="none";$("#runInput").value="";
+ $("#runToolBtn").textContent=t.price===0?"도구 사용해 보기 →":"데모 사용해 보기 →";
+ openModal("detailBackdrop");
+}
+function runTool(){
+ if(!currentTool)return;
+ $("#toolRunArea").classList.add("show");
+ const t=currentTool;
+ $("#runLabel").textContent=t.kind==="utm"?"기본 URL 입력":t.kind==="quote"?"품목과 금액 입력":"입력 내용";
+ $("#runInput").placeholder=t.kind==="dedupe"?"이름,이메일\\n민수,a@example.com\\n민수,a@example.com":t.kind==="tasks"?"예: 자료 조사하기, 민수, 금요일까지":t.kind==="filenames"?"예: 여행사진, 12":t.kind==="utm"?"https://example.com":t.kind==="quote"?"디자인 작업, 2, 50000":"내용을 입력하세요";
+ $("#runInput").focus();
+}
+function executeTool(){
+ const t=currentTool, input=$("#runInput").value;
+ if(!input.trim()){toast("먼저 내용을 입력해 주세요.");return}
+ let out="";
+ if(t.kind==="clean"){out=input.replace(/[ \t]+/g," ").replace(/\n[ \t]+/g,"\n").replace(/\n{3,}/g,"\n\n").trim();out+="\n\n— 글자 수: "+input.length+"자"}
+ else if(t.kind==="count"){out=`글자 수(공백 포함): ${input.length}\n글자 수(공백 제외): ${input.replace(/\s/g,"").length}\n줄 수: ${input?input.split(/\r?\n/).length:0}`}
+ else if(t.kind==="dedupe"){const lines=input.split(/\r?\n/),seen=new Set(),clean=[];for(const line of lines){if(!seen.has(line)){seen.add(line);clean.push(line)}}out=clean.join("\n")+`\n\n— 전체 ${lines.length}행 중 ${lines.length-clean.length}개 중복 행을 제거했습니다.`}
+ else if(t.kind==="filenames"){const parts=input.split(",").map(s=>s.trim()),prefix=parts[0]||"file",count=Math.min(200,Math.max(1,parseInt(parts[1]||"5",10)||5));out=Array.from({length:count},(_,i)=>`${prefix}_${String(i+1).padStart(3,"0")}`).join("\n")}
+ else if(t.kind==="tasks"){out="할 일 목록\n"+input.split(/[,;\n]/).map(s=>s.trim()).filter(Boolean).map((s,i)=>`${i+1}. [ ] ${s}`).join("\n")}
+ else if(t.kind==="utm"){try{const u=new URL(input);u.searchParams.set("utm_source","tinymarket");u.searchParams.set("utm_medium","demo");u.searchParams.set("utm_campaign","sample_campaign");out=u.toString()}catch(e){out="올바른 URL을 입력해 주세요. 예: https://example.com"}}
+ else if(t.kind==="quote"){const p=input.split(",");const qty=Number(p[1]),unit=Number(p[2]);out=`품목: ${p[0]||"미입력"}\n수량: ${Number.isFinite(qty)?qty:0}\n단가: ${(Number.isFinite(unit)?unit:0).toLocaleString("ko-KR")}원\n합계: ${((Number.isFinite(qty)?qty:0)*(Number.isFinite(unit)?unit:0)).toLocaleString("ko-KR")}원`}
+ else if(t.kind==="palette"){const hex=input.trim().replace("#","");if(!/^[0-9a-fA-F]{6}$/.test(hex))out="6자리 HEX 색상 코드를 입력해 주세요. 예: #5146E5";else{const n=parseInt(hex,16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;const comp="#"+[255-r,255-g,255-b].map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();out=`입력 색상: #${hex.toUpperCase()}\n보색 예시: ${comp}\nRGB: ${r}, ${g}, ${b}`}}
+ $("#runOutput").textContent=out;$("#runOutput").style.display="block";
+}
+$("#toolGrid").addEventListener("click",e=>{
+ const fav=e.target.closest("[data-fav]"),detail=e.target.closest("[data-detail]");
+ if(fav){const id=Number(fav.dataset.fav);saved.has(id)?saved.delete(id):saved.add(id);renderTools();toast(saved.has(id)?"저장한 도구에 추가했어요.":"저장 목록에서 삭제했어요.");}
+ if(detail)showDetail(detail.dataset.detail);
+});
+$("#searchInput").addEventListener("input",renderTools);
+$("#priceFilter").addEventListener("change",renderTools);
+$("#sortFilter").addEventListener("change",renderTools);
+$("#categoryFilters").addEventListener("click",e=>{const b=e.target.closest("[data-category]");if(!b)return;selectedCategory=b.dataset.category;$$(".chip").forEach(c=>c.classList.toggle("active",c===b));renderTools()});
+$("#favoritesNav").addEventListener("click",()=>{selectedCategory="saved";$$(".chip").forEach(c=>c.classList.toggle("active",c.dataset.category==="saved"));$("#explore").scrollIntoView({behavior:"smooth"});renderTools()});
+["openSubmit","heroSubmit","featureSubmit","bottomSubmit"].forEach(id=>$("#"+id).addEventListener("click",openSubmit));
+$("#runToolBtn").addEventListener("click",runTool);
+$("#executeTool").addEventListener("click",executeTool);
+$("#submitForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const name=$("#newName").value.trim(),desc=$("#newDesc").value.trim();
+ if(!name||!desc){toast("필수 항목을 입력해 주세요.");return}
+ const cats={text:"텍스트",file:"파일·데이터",design:"디자인",work:"업무 자동화"};
+ const id=nextId++,cat=$("#newCategory").value,price=Number($("#newPrice").value);
+ const tags=$("#newTags").value.split(",").map(s=>s.trim()).filter(Boolean).slice(0,5);
+ tools.unshift({id,name,creator:"내 도구 (데모)",category:cat,icon:({text:"✍️",file:"📁",design:"🎨",work:"⚡"})[cat],color:({text:"#eeedff",file:"#dff8ed",design:"#fff0dc",work:"#e3efff"})[cat],desc,features:cats[cat]+" 도구 · 제작자가 등록한 기능 소개",price,rating:5,reviews:0,popularity:100-id,tags:tags.length?tags:[cats[cat]],kind:"custom"});
+ closeModal("submitBackdrop");e.target.reset();selectedCategory="all";$$(".chip").forEach(c=>c.classList.toggle("active",c.dataset.category==="all"));$("#searchInput").value="";$("#priceFilter").value="all";renderTools();$("#explore").scrollIntoView({behavior:"smooth"});toast("데모 목록에 등록했어요. 서버에는 저장되지 않았습니다.");
+});
+$("#aboutLink").addEventListener("click",e=>{e.preventDefault();openModal("aboutBackdrop")});
+$$("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+$$(".modal-backdrop").forEach(back=>back.addEventListener("click",e=>{if(e.target===back)closeModal(back.id)}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$$(".modal-backdrop.show").forEach(m=>closeModal(m.id))});
+renderTools();
+</script>
+</body>
+</html>
